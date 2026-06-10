@@ -1,0 +1,12 @@
+id: "ai-agent-research"
+domain: "ai"
+topics:
+  - "ai agents"
+  - "memory"
+  - "multi-agent"
+  - "subagent"
+  - "tool use"
+frequency: "daily"
+lookback_days: 7
+max_candidates_per_source: 20
+min_import_score: 0.65
