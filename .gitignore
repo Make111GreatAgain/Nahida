@@ -6,8 +6,12 @@
 # Local Obsidian UI state.
 .obsidian/workspace*.json
 
-# Nahida generated caches, ledgers, review queues, run logs, and reports.
-vault/90_Generated/
+# Nahida generated indexes are useful shared retrieval caches.
+# Local ledgers, review queues, run logs, and reports are machine/run-specific.
+vault/90_Generated/ledgers/
+vault/90_Generated/review-queues/
+vault/90_Generated/runs/
+vault/90_Generated/reports/
 
 # Local intake artifacts and extracted full text should not be published.
 vault/02_Raw/pdf/extracted/

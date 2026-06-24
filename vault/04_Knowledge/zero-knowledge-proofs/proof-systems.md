@@ -449,6 +449,7 @@ source_note_refs:
   - "vault/03_Sources/papers/doi-10-1145-3548606-3560653-succinct-zero-knowledge-floating-point-computations.md"
   - "vault/03_Sources/papers/eprint-2023-156-zero-knowledge-functional-elementary-databases.md"
   - "vault/03_Sources/papers/sha256-9c8b8a3f92ae-scalable-zkp-generation-large-scale-computing.md"
+  - "vault/03_Sources/github/consensys-gnark-master.md"
 representative_source_refs:
   - "doi:10.1145/3460120.3484558"
   - "iacr:2019/142"
@@ -475,10 +476,14 @@ representative_source_refs:
   - "doi:10.1145/3548606.3560653"
   - "iacr:2023/156"
   - "sha256:9c8b8a3f92aef55804a598fb3e0c98a69572839c3ed654fa9ea476c5e0dab270"
+  - "github:Consensys/gnark@cb367d86b8ad0cc1ee1a29b89658f2f92a461721"
 query_keys:
   - "Proof systems"
   - "proof-systems"
   - "证明系统"
+  - "gnark"
+  - "Consensys gnark"
+  - "Go zk-SNARK framework"
   - "distributed proof generation"
   - "data-parallel ZKP"
   - "fully distributed ZKPs"
@@ -618,12 +623,12 @@ tags:
   - "nahida/knowledge"
   - "nahida/direction"
 freshness_status: "fresh"
-last_synthesized: "2026-06-23"
-valid_until: "2026-07-23"
+last_synthesized: "2026-06-24"
+valid_until: "2026-07-24"
 evidence_window_start: "2026-06-11"
-evidence_window_end: "2026-06-23"
+evidence_window_end: "2026-06-24"
 created: "2026-06-20"
-updated: "2026-06-23"
+updated: "2026-06-24"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260621-zkcplus-fair-exchange"
@@ -651,6 +656,7 @@ run_ids:
   - "nahida-knowledge-20260623-succinct-zk-floating-point"
   - "nahida-knowledge-20260623-zk-functional-elementary-databases"
   - "nahida-knowledge-20260623-scalable-zkp-generation"
+  - "nahida-knowledge-20260624-consensys-gnark"
 source_refs:
   - "doi:10.1145/3460120.3484558"
   - "iacr:2019/142"
@@ -677,6 +683,7 @@ source_refs:
   - "doi:10.1145/3548606.3560653"
   - "iacr:2023/156"
   - "sha256:9c8b8a3f92aef55804a598fb3e0c98a69572839c3ed654fa9ea476c5e0dab270"
+  - "github:Consensys/gnark@cb367d86b8ad0cc1ee1a29b89658f2f92a461721"
 confidence: "medium"
 trust_tier: "primary"
 ---
@@ -749,6 +756,7 @@ trust_tier: "primary"
 | [[floating-point-snarks|Floating-point SNARKs]] | 在 SNARK/argument 中处理 floating-point arithmetic：一条路线精确模拟 IEEE 754，另一条路线证明每个 gate 满足相对误差界。 | 地理、ML、科学计算等应用依赖 floating-point；需要按“exact library compatibility”或“bounded numerical error”选择路线。 | 不等于 zk-SNARK foundation；relative-error route 不保证 exact IEEE rounding，exact route 不自动降低 prover cost。 | [[arxiv-2404-14983v2-zero-knowledge-location-privacy-accurate-floating-point-snarks|ZKLP]]; [[doi-10-1145-3548606-3560653-succinct-zero-knowledge-floating-point-computations|Succinct ZK for Floating Point]] |
 | [[fri-iopps|FRI IOPPs]] | 通过 Reed-Solomon proximity、recursive folding、Merkle-authenticated oracle queries 和 opening-consistency 支撑透明 proof/commitment routes。 | 需要 transparent setup 或 proximity proof machinery，或需要为 DAS 构造 erasure-code commitments。 | 当前由 FRIDA seed 支撑，不替代原始 FRI/STARK foundation；FRIDA 用的是 erasure-code commitment route，不是完整 PCS API。 | [[sha256-1a035420215b-frida-data-availability-sampling-from-fri|FRIDA]] |
 | [[proof-system-benchmarking|Proof-system benchmarking]] | 用统一指标和可复现实验比较 arithmetic libraries、proof-system phases、proof size、memory 和 hardware sensitivity，并用低层数据估计协议 runtime。 | 需要选择 ZKP tools、评估 prover/verifier tradeoffs 或判断 paper benchmark 是否可迁移。 | 不是某个 proof system；exact rankings 依赖版本、电路实现和硬件，生产决策需要刷新。 | [[sha256-4b56be6d2631-zk-bench-toolset-comparative-evaluation-performance-benchmarking-snarks|zk-Bench]] |
+| production proof-system engineering frameworks | 把 circuit DSL、constraint compiler、witness encoding、Groth16/PLONK backend、KZG/Solidity/GPU hooks、std gadgets 和 testing 放进同一工程栈。 | 需要从应用电路走到可证明、可验证和可部署 verifier 的 production workflow。 | 仓库实现不替代 Groth16/PLONK/STARK foundation；具体 module behavior、security caveat 和 version compatibility 留在 source note。 | [[consensys-gnark-master|Consensys/gnark]] |
 | [[hardware-accelerated-proving|Hardware-accelerated proving]] | 用 GPU/FPGA/ASIC/multi-GPU 或硬件感知 arithmetic backend 加速 prover-heavy stages，例如 NTT/FFT、MSM 和有限域运算。 | Prover latency/throughput 是瓶颈，且 workload 能映射到硬件并行结构。 | 不改变 proof protocol security；exact speedups 依赖硬件、curve、bit width、workload sparsity、memory budget、module-vs-end-to-end boundary 和实现版本。 | [[doi-10-1145-3575693-3575711-gzkp-gpu-accelerated-zero-knowledge-proof-system|GZKP]]; [[doi-10-1109-isca52012-2021-00040-pipezk-pipelined-architecture|PipeZK]] |
 | ML tensor/operator proving | 用 sumcheck/MLE 处理 tensor arithmetic，用 lookup/tensor lookup 处理 activation、normalization、attention 等非算术操作。 | ML/LLM inference relation 需要被编码为可验证 proof statement。 | 不等于 proof-system foundation；量化误差、table size、GPU proving 和模型边界留在 [[verifiable-inference|Verifiable inference]] / source note。 | [[doi-10-1145-3658644-3670334-zkllm-zero-knowledge-proofs-for-large-language-models|zkLLM]] |
 | Data-parallel space-efficient SNARKs | 用 space-efficient sumcheck、streaming GKR、sublinear public-parameter polynomial commitments 和 Fiat-Shamir 组合，在 data-parallel layered circuits 上降低 prover memory。 | 计算可表达为 layered data-parallel arithmetic circuits，且 prover memory 比总 circuit size 更关键。 | 适用电路类受限；可能增加 prover time；sumcheck/GKR 细节通过 bridge 连接到 [[sum-check-protocol|Sum-check protocol]]。 | [[doi-10-1145-3658644-3690318-sparrow-space-efficient-zksnark-data-parallel-circuits|Sparrow]] |
@@ -778,6 +786,7 @@ trust_tier: "primary"
 | [[sha256-1a035420215b-frida-data-availability-sampling-from-fri|FRIDA: Data Availability Sampling from FRI]] | paper | 作为 FRI IOPP source extension，给出 FRI/batched FRI opening-consistency proof，并把 IOPP 编译到 DAS erasure-code commitments | 不是 FRI 原始论文；主要应用目标是 DAS，不证明 general STARK/PCS landscape | `§3-§5`, `Appendix C` |
 | [[sha256-99262a57dce4-saver-snark-friendly-verifiable-encryption-rerandomization|SAVER: SNARK-friendly, Additively-homomorphic, and Verifiable Encryption and decryption with Rerandomization]] | paper | 作为 verifiable-encryption source extension，给出 SNARK-friendly VE、verifiable decryption、rerandomization 和 Vote-SAVER application | 不升级 zk-SNARK foundation；pairing/Groth16-like construction 和 benchmark details 留在 source note | `p1-p44` |
 | [[sha256-4b56be6d2631-zk-bench-toolset-comparative-evaluation-performance-benchmarking-snarks|zk-Bench: A Toolset for Comparative Evaluation and Performance Benchmarking of SNARKs]] | paper | 作为 proof-system benchmarking source extension，给出 arithmetic/circuit benchmark framework、runtime estimator 和 tool-selection evidence | 不升级 zk-SNARK foundation；numeric rankings are version/hardware/circuit dependent and repo not analyzed | `p1-p21`, `Appendix A-B` |
+| [[consensys-gnark-master|Consensys/gnark]] | GitHub repository | 作为 production proof-system engineering source extension，给出 Go circuit DSL、R1CS/SCS compiler、Groth16/PLONK backend、KZG/Solidity/GPU hooks、std gadgets 和测试框架的实现证据 | 不升级 Groth16/PLONK/zk-SNARK foundation；module details and security/serialization caveats stay in source note | `frontend/compile.go`; `backend/groth16`; `backend/plonk`; `std`; `test` |
 | [[sha256-7ec0866c4734-hekaton-horizontally-scalable-zksnarks-proof-aggregation|Hekaton: Horizontally-Scalable zkSNARKs via Proof Aggregation]] | paper | 作为 distributed-proof-generation/proof-aggregation source extension，给出 divide-and-aggregate zkSNARK、partition-friendly memory checking 和 Mirage commit-carrying aggregation route | 不升级 zk-SNARK foundation；Hekaton system details and benchmark numbers stay in source note | `p1-p35`, Appendix `p36-p44` |
 | [[sha256-f45eb8cc0d43-siniel-distributed-privacy-preserving-zksnark|Siniel: Distributed Privacy-Preserving zkSNARK]] | paper | 作为 private delegated proving source extension，给出 witness-private zkSNARK prover outsourcing、WCC/PCC consistency checkers 和 KZG-backed binding route | 不升级 generic distributed ZKP foundation；EOS/zkSaaS/collaborative zkSNARKs 对照仍需 source-level 吸收 | `p1-p30` |
 | [[sha256-5714931881cf-split-prover-zero-knowledge-snarks|Split Prover Zero-Knowledge SNARKs]] | paper | 作为 split prover source extension，给出 partial-witness two-phase Groth16 proving、aux split zero-knowledge 和 tight second-phase lower bound | 不升级 Groth16/zk-SNARK foundation；implementation 和 non-Groth16 follow-up 仍缺 | `p1-p23` |
@@ -794,17 +803,18 @@ trust_tier: "primary"
 
 ## 当前综合
 
-- Evidence window: `2026-06-11` to `2026-06-23`，仅覆盖当前 vault 已有 source/legacy notes。
+- Evidence window: `2026-06-11` to `2026-06-24`，仅覆盖当前 vault 已有 source/legacy notes。
 - Freshness: `fresh` for migration structure; not a latest-news claim.
-- Valid until: `2026-07-23`。
+- Valid until: `2026-07-24`。
 - 综合: 此方向已作为 ZKP 的 proof-system 入口，但目前必须标记 foundation_thin。ZKCPlus 把 commit-and-prove 从 modular-zkSNARKs 的局部行提升为独立 method-family seed：CP 可以服务 fair exchange 的 committed data / predicate / ciphertext consistency，而不是只服务 SNARK gadget composition；Garg et al. 进一步把 CP 作为 relative-error floating-point proof compiler backend，说明 CP 的可迁移对象是 committed-witness/R1CS proving interface，而不是 payment fairness 或 numeric semantics。zkBridge/DIZK/Pianist/Hekaton/Siniel/Split Prover 覆盖 distributed/prover-side engineering 的多类 evidence：data-parallel route、Spark-distributed Groth route、bivariate Plonk route、divide-and-aggregate via proof aggregation route、full-witness private delegation route、partial-witness split proving route；GZKP/PipeZK 把另一条 prover-side route 独立出来: hardware-accelerated proving，分别关注 GPU NTT/MSM/finite-field arithmetic and custom ASIC/pipelined NTT-MSM backend。SnarkFold/Hekaton 共同扩展 proof aggregation，但分别走 split-IVC/folding 和 Mirage commit-carrying aggregation。Mangrove/Sparrow/Gemini/Epistle/SPLITA 共同把 memory-efficient SNARKs 拆成 folding/PCD、data-parallel streaming GKR/sumcheck、elastic SNARKs、hash-bound front-end circuit partitioning 四条路线，其中 [[elastic-snarks|Elastic SNARKs]] 现在有 Gemini R1CS 与 Epistle Plonkish/HyperPlonk 两个来源；zk-vSQL 增加 function-independent preprocessing zero-knowledge argument route，强调 setup 与具体电路解耦但保留 trusted preprocessing 与交互式边界；ZKLP/Garg et al. 共同扩展 floating-point SNARKs，但前者是 exact IEEE 754 compatibility route，后者是 relative-error approximate route；zkLLM 覆盖 ML tensor/operator proving；FRIDA 新增 FRI IOPP/opening-consistency seed；SAVER 新增 verifiable encryption seed；zk-Bench/DIZK/GZKP/PipeZK/SPLITA 共同提醒 proof-system 节点要区分“主问题”“机制依赖”和“评测证据”: sumcheck/GKR/FRI/VE/aggregation/KZG consistency checking/elastic KZG/elastic multilinear KZG/zk-VPD/Groth16 split proving/CP-NIZK proof-of-delivery/NTT-MSM hardware acceleration/cluster proving/hash-bound circuit partitioning 都是可迁移或待验证机制，benchmark 数值、lower bound、module speedup、single-machine memory reduction、R1CS-size reduction 和 exact rankings 必须留在 source note 或专门评测节点里。
+- Repository implementation update: [[consensys-gnark-master|Consensys/gnark]] 补上 production Go proof-system framework evidence，显示 frontend compiler、R1CS/SCS、Groth16/PLONK、KZG、Solidity、ICICLE GPU、std gadgets 和 test harness 如何在一个工程栈中协作；这降低 repo evidence 缺口，但不替代 Groth16/PLONK/zk-SNARK foundation。
 
 ## 领域态势
 
 - Research dynamics note: not_applicable
 - Dynamics freshness: not_applicable
 - Latest academic focus summary: existing-notes-only; no external latest evidence was fetched.
-- Latest industrial focus summary: repository/implementation evidence is sparse unless source notes say otherwise.
+- Latest industrial focus summary: current-vault repository evidence now includes Consensys/gnark as one production Go zk-SNARK framework, but cross-framework trend claims still require broader repo/news refresh.
 - Open-problem summary: see `缺口与队列`.
 - Next refresh trigger: new deep-read source or daily/foundation fetch.
 
@@ -829,6 +839,7 @@ trust_tier: "primary"
 | [[sha256-1a035420215b-frida-data-availability-sampling-from-fri|FRIDA: Data Availability Sampling from FRI]] | source extension + child split trigger | FRI/batched FRI opening-consistency; IOPP-to-erasure-code-commitment compiler for DAS | 下级结构; 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | yes | route details through [[fri-iopps|FRI IOPPs]] and [[fri-iopps-to-data-availability-sampling|FRI IOPPs -> data availability sampling]] |
 | [[sha256-99262a57dce4-saver-snark-friendly-verifiable-encryption-rerandomization|SAVER: SNARK-friendly, Additively-homomorphic, and Verifiable Encryption and decryption with Rerandomization]] | source extension + child split trigger | SNARK-friendly verifiable encryption; commit-carrying encryption; verifiable decryption; rerandomizable proof/ciphertext | 下级结构; 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | yes | route details through [[verifiable-encryption|Verifiable encryption]] and [[zk-snarks-to-verifiable-encryption|zk-SNARKs -> verifiable encryption]] |
 | [[sha256-4b56be6d2631-zk-bench-toolset-comparative-evaluation-performance-benchmarking-snarks|zk-Bench: A Toolset for Comparative Evaluation and Performance Benchmarking of SNARKs]] | source extension + child split trigger | proof-system benchmarking/evaluation axis; arithmetic and circuit benchmarks; runtime estimation; hardware sensitivity | 下级结构; 方法族与解决路线; 代表 Sources; 当前综合 | yes | route details through [[proof-system-benchmarking|Proof-system benchmarking]]; analyze zk-Bench repo if implementation/reproducibility details matter |
+| [[consensys-gnark-master|Consensys/gnark]] | repository source extension | production Go zk-SNARK framework; frontend compiler; R1CS/SCS; Groth16/PLONK; KZG; ICICLE; std gadgets; test harness | 方法族与解决路线; 代表 Sources; 当前综合; 领域态势 | no | route module-level details through source note; compare with other repos before splitting proof-system-engineering |
 | [[sha256-7ec0866c4734-hekaton-horizontally-scalable-zksnarks-proof-aggregation|Hekaton: Horizontally-Scalable zkSNARKs via Proof Aggregation]] | source extension + bridge trigger | divide-and-aggregate distributed zkSNARK; partition-friendly memory checking; Mirage commit-carrying aggregation; source-local scaling benchmark | 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | yes | route details through [[distributed-proof-generation|Distributed proof generation]], [[snark-proof-aggregation|SNARK proof aggregation]] and [[distributed-proof-generation-to-snark-proof-aggregation|Distributed proof generation -> SNARK proof aggregation]] |
 | [[sha256-f45eb8cc0d43-siniel-distributed-privacy-preserving-zksnark|Siniel: Distributed Privacy-Preserving zkSNARK]] | source extension + child split trigger | private delegated proving; witness-private prover outsourcing; WCC/PCC consistency checkers; KZG-backed binding route | 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | yes | route details through [[private-delegated-proving|Private delegated proving]] and [[private-delegated-proving-to-kzg-commitments|Private delegated proving -> KZG commitments]] |
 | [[sha256-5714931881cf-split-prover-zero-knowledge-snarks|Split Prover Zero-Knowledge SNARKs]] | source extension + child split trigger | split prover zkSNARKs; partial-witness precomputation; Groth16-compatible two-phase proving; recursion/folding contrast boundary | 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | yes | route details through [[split-prover-zksnarks|Split prover zkSNARKs]] and [[split-prover-zksnarks-to-recursion-and-folding|Split prover zkSNARKs -> Recursion and folding]] |
@@ -911,6 +922,7 @@ trust_tier: "primary"
 | nahida-knowledge-proof-systems | bridges_to | nahida-bridge-hardware-accelerated-proving-to-proof-system-benchmarking | bridge note | high | active_seed |
 | nahida-knowledge-proof-systems | evidenced_by | vault/03_Sources/papers/eprint-2023-156-zero-knowledge-functional-elementary-databases.md | ZK-FEDB source note; set-operation ZKS and functional EDB route | high | active_seed |
 | nahida-knowledge-proof-systems | bridges_to | nahida-bridge-zero-knowledge-sets-to-verifiable-database-queries | bridge note | high | active_seed |
+| nahida-knowledge-proof-systems | evidenced_by | vault/03_Sources/github/consensys-gnark-master.md | Consensys/gnark source note; production Go proof-system engineering framework | high | active_seed |
 
 ## 缺口与队列
 
@@ -929,7 +941,7 @@ trust_tier: "primary"
 | Original FRI、DEEP-FRI、STARK/transparent proof-system primary sources 缺。 | FRIDA 提供 FRI opening-consistency application seed，但不足以完成 FRI/STARK foundation。 | nahida-update or nahida-research-search | high | queued |
 | Generic verifiable encryption canonical sources、ZKCP/FairSwap-like comparison sources 缺。 | SAVER 和 ZKCPlus 提供 VE/CP-adjacent seeds，但不足以完成 verifiable-encryption foundation 或 fair-exchange protocol landscape。 | nahida-update or nahida-research-search | high | queued |
 | CP-NIZK/commit-and-prove canonical comparison sources still thin. | ZKCPlus/LegoSNARK/Geppetto/SAVER/Mangrove 足以创建 foundation-thin node，但 construction taxonomy 仍不完整。 | nahida-research-search / nahida-update | high | queued |
-| Current proof-system benchmark and repo evidence 缺。 | zk-Bench 提供 2023 benchmark/tooling seed；当前工具选择和生产性能需要 repo/current benchmark refresh。 | nahida-github-repo-analyze / nahida-research-search | high | queued |
+| Cross-framework proof-system repo comparison still thin. | Consensys/gnark 已补一条 production repo deep read；当前工具选择和生产性能仍需要 arkworks/halo2/circom/snarkjs/noir/barretenberg 等 repo/current benchmark refresh。 | nahida-github-repo-analyze / nahida-research-search | high | queued |
 | Private delegated proving 对照 sources 缺。 | Siniel 给出 strong seed，但 EOS、zkSaaS、FHE-based 或 collaborative zkSNARKs 还没吸收，暂不能把其 WCC/PCC 设计泛化为全领域标准。 | nahida-update / nahida-research-search | high | queued |
 | Split prover non-Groth16 follow-up 与实现 evidence 缺。 | Split Prover 给出 Groth16 theory route；需要判断 PLONK/STARK/transparent systems 和真实 delegatable-payment workload 是否支持同类 split。 | nahida-research-search / nahida-github-repo-analyze | high | watch |
 | Accelerated prover sources and repos still thin. | GZKP provides a strong GPU source seed and PipeZK provides a custom ASIC seed, but FPGA/current GPU prover and production artifacts are needed before a mature accelerator taxonomy. | nahida-update / nahida-github-repo-analyze / nahida-daily-fetch | high | queued |
@@ -953,6 +965,7 @@ trust_tier: "primary"
 | 2026-06-20 | nahida-knowledge-20260620-zklp-floating-point-snarks | Split floating-point SNARKs into child method-family node and added ZKLP source extension. | 1 source note | codex |
 | 2026-06-20 | nahida-knowledge-20260620-zkllm-verifiable-inference | Added ML tensor/operator proving source extension for zkML verifiable inference. | 1 source note | codex |
 | 2026-06-20 | nahida-knowledge-20260620-sparrow-space-efficient-snarks | Added data-parallel space-efficient SNARK route and bridges to sum-check/verifiable ML training. | 1 source note | codex |
+| 2026-06-24 | nahida-knowledge-20260624-consensys-gnark | Added Consensys/gnark as production Go proof-system engineering repository source extension. | 1 source note | codex |
 | 2026-06-20 | nahida-knowledge-20260620-frida-data-availability-from-fri | Split FRI IOPPs into a foundation-thin method-family node and linked it to DAS via bridge. | 1 source note | codex |
 | 2026-06-21 | nahida-knowledge-20260621-saver-verifiable-encryption | Split verifiable encryption into a foundation-thin method-family node and linked it to zk-SNARKs/FDE boundaries. | 1 source note | codex |
 | 2026-06-21 | nahida-knowledge-20260621-zk-bench-proof-system-benchmarking | Split proof-system benchmarking into a foundation-thin evaluation-axis node and added zk-Bench as source extension. | 1 source note | codex |

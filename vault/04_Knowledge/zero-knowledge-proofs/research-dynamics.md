@@ -124,6 +124,7 @@ source_note_refs:
   - "vault/03_Sources/papers/doi-10-1145-3548606-3560653-succinct-zero-knowledge-floating-point-computations.md"
   - "vault/03_Sources/papers/eprint-2023-156-zero-knowledge-functional-elementary-databases.md"
   - "vault/03_Sources/papers/eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system.md"
+  - "vault/03_Sources/github/consensys-gnark-master.md"
 representative_source_refs:
   - "doi:10.1007/978-3-642-17373-8_11"
   - "iacr:2021/370"
@@ -137,6 +138,7 @@ representative_source_refs:
   - "doi:10.1145/3548606.3560653"
   - "iacr:2023/156"
   - "iacr:2024/872"
+  - "github:Consensys/gnark@cb367d86b8ad0cc1ee1a29b89658f2f92a461721"
 query_keys:
   - "zero-knowledge-proofs latest progress"
   - "zero-knowledge-proofs research trends"
@@ -168,16 +170,18 @@ topics:
   - "functional database queries"
   - "elastic SNARKs"
   - "Plonkish SNARKs"
+  - "gnark"
+  - "production zk-SNARK framework"
 tags:
   - "nahida/knowledge"
   - "nahida/domain-dynamics"
 freshness_status: "fresh"
-last_synthesized: "2026-06-23"
-valid_until: "2026-07-23"
+last_synthesized: "2026-06-24"
+valid_until: "2026-07-24"
 evidence_window_start: "2026-06-11"
-evidence_window_end: "2026-06-23"
+evidence_window_end: "2026-06-24"
 created: "2026-06-20"
-updated: "2026-06-23"
+updated: "2026-06-24"
 managed_by: "nahida"
 run_ids:
   - "nahida-consolidate-20260620-legacy-to-knowledge-migration"
@@ -190,6 +194,7 @@ run_ids:
   - "nahida-knowledge-20260623-succinct-zk-floating-point"
   - "nahida-knowledge-20260623-zk-functional-elementary-databases"
   - "nahida-knowledge-20260623-epistle-elastic-snarks"
+  - "nahida-knowledge-20260624-consensys-gnark"
 source_refs:
   - "doi:10.1007/978-3-642-17373-8_11"
   - "iacr:2021/370"
@@ -203,6 +208,7 @@ source_refs:
   - "doi:10.1145/3548606.3560653"
   - "iacr:2023/156"
   - "iacr:2024/872"
+  - "github:Consensys/gnark@cb367d86b8ad0cc1ee1a29b89658f2f92a461721"
 confidence: "low"
 trust_tier: "primary"
 ---
@@ -212,9 +218,9 @@ trust_tier: "primary"
 ## 领域范围与新鲜度
 
 - Parent domain: [[zero-knowledge-proofs|Zero-knowledge proofs]]
-- Evidence window: `2026-06-11` to `2026-06-23`，只代表当前 vault 已吸收资料。
-- Last synthesized: `2026-06-23`
-- Valid until: `2026-07-23`
+- Evidence window: `2026-06-11` to `2026-06-24`，只代表当前 vault 已吸收资料。
+- Last synthesized: `2026-06-24`
+- Valid until: `2026-07-24`
 - Freshness status: `fresh` for current-vault synthesis; this is still not an external latest-trend claim because no daily-fetch/web research ran in this update.
 - Retrieval role: 回答该最大领域的已记录研究倾向、已有证据范围和待补来源，避免 query 直接扫全部 source notes。
 - Update scope: 新论文、仓库、web research、daily freshness signals、bridge notes、问题节点重大变化。
@@ -233,6 +239,7 @@ trust_tier: "primary"
 | 新增 Sparrow 后，vault 已记录 data-parallel space-efficient SNARKs 与 zkML / verifiable ML training seed；这仍不是外部最新趋势判断。 | source_absorption | proof-systems / memory-efficient SNARKs / zkML / verifiable training | [[doi-10-1145-3658644-3690318-sparrow-space-efficient-zksnark-data-parallel-circuits|Sparrow]] | high |
 | 新增 ZK-FEDB 后，vault 已记录 ZKS/ZK-EDB primitive 与 verifiable database query seed；这仍不是外部最新趋势判断。 | source_absorption | proof-systems / zero-knowledge sets / applications / verifiable database queries | [[eprint-2023-156-zero-knowledge-functional-elementary-databases|ZK-FEDB]] | high |
 | 新增 Epistle 后，vault 已记录 elastic SNARKs 的 Plonkish/HyperPlonk route，并把 Gemini + Epistle 提升为 [[elastic-snarks|Elastic SNARKs]] 子方法族；这仍不是外部最新趋势判断。 | source_absorption | proof-systems / memory-efficient SNARKs / elastic SNARKs / KZG commitments | [[eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system|Epistle]] | high |
+| 新增 Consensys/gnark 后，vault 已记录 production Go zk-SNARK framework 的 repo-level implementation evidence：frontend compiler、R1CS/SCS、Groth16/PLONK、KZG、Solidity、ICICLE、std gadgets 和 test harness。 | repo_absorption | proof-systems / zk-SNARKs / KZG commitments / hardware-accelerated proving | [[consensys-gnark-master|Consensys/gnark]] | high |
 | 研究动态需要后续 `nahida-daily-fetch` 或 `nahida-research-search` 重新验证。 | freshness_gap | domain dynamics | no daily evidence in current run | high |
 
 ## 学术关注
@@ -249,7 +256,8 @@ trust_tier: "primary"
 
 | 关注点 | 工程动机 | 代表仓库/标准/实现/新闻 | 约束或瓶颈 | 影响的 Knowledge nodes |
 | --- | --- | --- | --- | --- |
-| gap | 当前主要是 paper source，缺 repo/standard/release evidence | none | 不能声称工业最新趋势 | domain queued |
+| production zk-SNARK framework implementation | 工程用户需要知道 circuit DSL、compiler、prover/verifier backend、KZG/Solidity/GPU/std gadgets/testing 如何组合成可用栈。 | [[consensys-gnark-master|Consensys/gnark]] | 单仓库证据；不能外推出全行业工具趋势或安全/性能排名。 | [[proof-systems|Proof systems]], [[zk-snarks|zk-SNARKs]], [[kzg-commitments|KZG commitments]] |
+| repo evidence coverage gap | 当前只有少量 repo-level deep read，缺 cross-framework comparison、standards/releases/news freshness。 | Consensys/gnark | 仍不能声称工业最新趋势。 | domain queued |
 
 ## 新兴方向与热词
 
@@ -276,7 +284,7 @@ trust_tier: "primary"
 ## 方向倾向判断
 
 - 学术界倾向: 当前只能说 vault 已记录的 paper seed 覆盖若干问题方向；不能声称 2026-06-20 的外部最新趋势。
-- 工业界倾向: 缺 repo/standard/release evidence。
+- 工业界倾向: 当前 vault 已有 Consensys/gnark 这一条 production framework repo evidence；仍缺 standards/releases/news 和多仓库对照，因此不能声称外部工业最新趋势。
 - 二者一致的地方: 需要后续 source-backed freshness pass。
 - 二者张力: not enough evidence。
 - 可能的新内容: child knowledge nodes 的 gap/watchlist。
@@ -297,6 +305,7 @@ trust_tier: "primary"
 | [[doi-10-1145-3658644-3690318-sparrow-space-efficient-zksnark-data-parallel-circuits|Sparrow: Space-Efficient zkSNARK for Data-Parallel Circuits and Applications to Zero-Knowledge Decision Trees]] | 2026-06-20 | source | data-parallel space-efficient SNARKs and zkML / verifiable ML training seed evidence | not latest trend evidence |
 | [[doi-10-1145-3548606-3560653-succinct-zero-knowledge-floating-point-computations|Succinct Zero Knowledge for Floating Point Computations]] | 2026-06-23 | source | relative-error floating-point proof and commit-and-prove compiler backend seed evidence | not latest trend evidence |
 | [[eprint-2023-156-zero-knowledge-functional-elementary-databases|Zero-Knowledge Functional Elementary Databases]] | 2026-06-23 | source | ZKS/ZK-EDB primitive and verifiable database query seed evidence | not latest trend evidence |
+| [[consensys-gnark-master|Consensys/gnark]] | 2026-06-24 | repository source | production Go zk-SNARK framework implementation evidence | not broad industry trend evidence |
 
 ## 刷新触发器
 
@@ -319,3 +328,4 @@ trust_tier: "primary"
 | 2026-06-20 | nahida-knowledge-20260620-sparrow-space-efficient-snarks | Added Sparrow as recorded data-parallel space-efficient SNARK / verifiable ML training seed while keeping dynamics stale for external freshness. | 2026-06-20 | 1 source note |
 | 2026-06-23 | nahida-knowledge-20260623-succinct-zk-floating-point | Added Garg et al. as recorded relative-error floating-point proof / CP compiler backend seed while keeping dynamics non-external-latest. | 2026-06-23 | 1 source note |
 | 2026-06-23 | nahida-knowledge-20260623-zk-functional-elementary-databases | Added ZK-FEDB as recorded ZKS/ZK-EDB and verifiable database query seed while keeping dynamics non-external-latest. | 2026-06-23 | 1 source note |
+| 2026-06-24 | nahida-knowledge-20260624-consensys-gnark | Added Consensys/gnark as recorded production zk-SNARK framework repo evidence while keeping dynamics non-external-latest. | 2026-06-24 | 1 source note |

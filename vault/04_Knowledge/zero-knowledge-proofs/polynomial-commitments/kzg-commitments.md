@@ -115,6 +115,7 @@ source_note_refs:
   - "vault/03_Sources/papers/sha256-c13a2c3e26f0-eos-efficient-private-delegation-zksnark-provers.md"
   - "vault/03_Sources/papers/sha256-bdda577b4120-gemini-elastic-snarks-for-diverse-environments.md"
   - "vault/03_Sources/papers/eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system.md"
+  - "vault/03_Sources/github/consensys-gnark-master.md"
 representative_source_refs:
   - "doi:10.1007/978-3-642-17373-8_11"
   - "sha256:0aebec128887036bbdc8a877dadc9d4fa69ca39278bf18c98d94c6803ba09f06"
@@ -123,6 +124,7 @@ representative_source_refs:
   - "sha256:c13a2c3e26f0c7a11a46b4050540dbddbc3efe7fa36a2188182867b86bbb47c4"
   - "sha256:bdda577b4120b37ed21d44cdb73a64376ed153a5fbc79fc0ea62bc171a4635f8"
   - "iacr:2024/872"
+  - "github:Consensys/gnark@cb367d86b8ad0cc1ee1a29b89658f2f92a461721"
 query_keys:
   - "KZG commitments"
   - "kzg-commitments"
@@ -141,6 +143,8 @@ query_keys:
   - "Gemini KZG"
   - "elastic multilinear KZG"
   - "Epistle multilinear KZG"
+  - "gnark PLONK KZG"
+  - "gnark KZG SRS"
 aliases:
   - "Kate commitments"
   - "KZG"
@@ -161,12 +165,12 @@ tags:
   - "nahida/knowledge"
   - "nahida/problem"
 freshness_status: "fresh"
-last_synthesized: "2026-06-23"
-valid_until: "2026-07-23"
+last_synthesized: "2026-06-24"
+valid_until: "2026-07-24"
 evidence_window_start: "2026-06-11"
-evidence_window_end: "2026-06-23"
+evidence_window_end: "2026-06-24"
 created: "2026-06-20"
-updated: "2026-06-23"
+updated: "2026-06-24"
 managed_by: "nahida"
 run_ids:
   - "nahida-consolidate-20260620-legacy-to-knowledge-migration"
@@ -176,6 +180,7 @@ run_ids:
   - "nahida-knowledge-20260623-eos-private-delegated-proving"
   - "nahida-knowledge-20260622-gemini-elastic-snarks"
   - "nahida-knowledge-20260623-epistle-elastic-snarks"
+  - "nahida-knowledge-20260624-consensys-gnark"
 source_refs:
   - "doi:10.1007/978-3-642-17373-8_11"
   - "sha256:0aebec128887036bbdc8a877dadc9d4fa69ca39278bf18c98d94c6803ba09f06"
@@ -184,6 +189,7 @@ source_refs:
   - "sha256:c13a2c3e26f0c7a11a46b4050540dbddbc3efe7fa36a2188182867b86bbb47c4"
   - "sha256:bdda577b4120b37ed21d44cdb73a64376ed153a5fbc79fc0ea62bc171a4635f8"
   - "iacr:2024/872"
+  - "github:Consensys/gnark@cb367d86b8ad0cc1ee1a29b89658f2f92a461721"
 confidence: "medium"
 trust_tier: "primary"
 ---
@@ -243,6 +249,7 @@ trust_tier: "primary"
 | EOS PIOP/PCS consistency checking | 用 KZG-style PC commit/open circuits 和 random-point PIOP consistency checks 约束 worker 生成的 polynomial oracles，避免最终 proof validity 变成 witness leakage channel。 | delegator 可在线参与 consistency-check rounds，且目标是 PIOP+PCS universal-setup zkSNARK delegation。 | 这是 EOS/MARLIN-style usage extension；KZG 不提供 witness privacy 本身，delegated SNARK protocol 和 secret sharing 才决定安全边界。 | [[sha256-c13a2c3e26f0-eos-efficient-private-delegation-zksnark-provers|EOS]] |
 | Elastic KZG commitment/opening | commitment 通过 coefficient/SRS streams 维护 running group-sum；opening 用高次到低次的 quotient-witness recurrence 小状态生成 opening witness。 | elastic SNARK / streaming R1CS compiler 需要 PCS layer 也能 streaming commit/open。 | 不改变 KZG trusted setup、pairing assumptions 或安全边界；batch opening 和 stream order 是 Gemini-specific engineering/protocol details。 | [[sha256-bdda577b4120-gemini-elastic-snarks-for-diverse-environments|Gemini]] |
 | Elastic multilinear KZG commitment/opening | 对 multilinear polynomial commitment，commitment 顺序扫描 vector/SRS streams；opening 用 multilinear decomposition 和 stack 合并相邻元素，小状态生成 `O(log N)` 个 witness group elements。 | Plonkish/HyperPlonk-style elastic SNARK 需要 multilinear PCS 也支持 streaming open/check。 | 保留 KZG trusted setup/pairing assumptions；需要有序 SRS/key streams；不自动解决 Plonkish lookup streaming。 | [[eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system|Epistle]] |
+| KZG-backed PLONK implementation | SparseR1CS trace、selector/permutation polynomials、quotient/linearized polynomial 和 batch opening 都通过 KZG SRS/commit/open/check 组织；setup 需要 canonical 与 Lagrange SRS。 | PLONK backend implementation needs trusted/setup SRS provenance and efficient polynomial commitments. | 这是 gnark 的 implementation usage extension；不替代 KZG foundation，也不说明所有 PLONK implementations 都有相同 API/serialization/security boundary。 | [[consensys-gnark-master|Consensys/gnark]] |
 
 ## 代表 Sources
 
@@ -255,6 +262,7 @@ trust_tier: "primary"
 | [[sha256-c13a2c3e26f0-eos-efficient-private-delegation-zksnark-provers|EOS: Efficient Private Delegation of zkSNARK Provers]] | paper | 作为 usage source extension：KZG-style PC operations and openings support efficient delegated PIOP prover circuits and consistency checking | 不替代 KZG foundation；delegator 在线检查和 MARLIN/arkworks 实现细节留在 source note | `§4-§6`, Appendix B |
 | [[sha256-bdda577b4120-gemini-elastic-snarks-for-diverse-environments|Gemini: Elastic SNARKs for Diverse Environments]] | paper | 作为 usage source extension：KZG commitments/openings 可被 streaming realized，成为 elastic SNARK compiler 的 PCS 层 | 不替代 KZG foundation；低内存 SNARK 还依赖 elastic PIOP/streaming R1CS | `§2.3`, `§9`, `§10` |
 | [[eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system|Epistle: Elastic Succinct Arguments for Plonk Constraint System]] | paper | 作为 usage source extension：multilinear KZG 可以被 streaming commit/open，成为 elastic Plonkish SNARK 的 PCS 层 | 不替代 KZG foundation；低内存 Plonkish SNARK 还依赖 streaming HyperPlonk PIOP toolbox | `§2`, `§6`, `§7` |
+| [[consensys-gnark-master|Consensys/gnark]] | GitHub repository | 作为 usage source extension：PLONK backend 使用 KZG SRS、trace commitments、quotient/linearized polynomial 和 batch openings | 不替代 KZG foundation；production SRS provenance、serialization compatibility 和 backend-specific details 留在 source note | `backend/plonk/plonk.go`; `backend/plonk/bn254/setup.go`; `backend/plonk/bn254/prove.go`; `backend/plonk/bn254/verify.go` |
 
 ## 正反例约束
 
@@ -265,17 +273,18 @@ trust_tier: "primary"
 
 ## 当前综合
 
-- Evidence window: `2026-06-11` to `2026-06-23`，仅覆盖当前 vault 已有 source/legacy notes。
+- Evidence window: `2026-06-11` to `2026-06-24`，仅覆盖当前 vault 已有 source/legacy notes。
 - Freshness: `fresh` for migration structure; not a latest-news claim.
-- Valid until: `2026-07-23`。
+- Valid until: `2026-07-24`。
 - 综合: KZG 是 PCS 的代表实例，效率好但带来 setup/trust/pairing 假设边界。Pianist 说明 KZG 的 quotient/opening intuition 可被扩展到 distributed bivariate setting，支持多机 Plonk proving；Atomic/Fair Data Exchange 说明 KZG 的 succinct commitment、batch opening 和 subset opening 可作为 committed-data exchange 的 correctness anchor；EOS 与 Siniel 说明 KZG/PCS commitments/openings 还可作为 private delegated proving 的 consistency-binding layer，约束 secret-shared witness 与 PIOP oracle state；Gemini 说明 KZG commitment/opening 能被 streaming realized，作为 R1CS elastic SNARK 的 PCS layer；Epistle 说明 multilinear KZG 也能被 streaming realized，作为 Plonkish/HyperPlonk elastic SNARK 的 PCS layer。这些都是 usage extensions: DKZG/FDE/EOS-Siniel delegated checks/elastic KZG/elastic multilinear KZG 不替代 KZG foundation，也不把 KZG 变成完整 proof-system、fairness mechanism、delegated-proving protocol 或通用低内存 SNARK 定理。
+- Repository implementation update: [[consensys-gnark-master|Consensys/gnark]] 补充 KZG-backed PLONK implementation evidence：PLONK setup 需要 canonical/Lagrange SRS，setup/prove/verify 围绕 trace commitments、quotient/linearized polynomial 和 batch openings；这是 KZG usage extension，不替代 KZG foundation。
 
 ## 领域态势
 
 - Research dynamics note: not_applicable
 - Dynamics freshness: not_applicable
 - Latest academic focus summary: existing-notes-only; no external latest evidence was fetched.
-- Latest industrial focus summary: repository/implementation evidence is sparse unless source notes say otherwise.
+- Latest industrial focus summary: repository evidence now includes gnark's KZG-backed PLONK implementation, but cross-implementation KZG trends still need broader repo/standard refresh.
 - Open-problem summary: see `缺口与队列`.
 - Next refresh trigger: new deep-read source or daily/foundation fetch.
 
@@ -290,6 +299,7 @@ trust_tier: "primary"
 | [[sha256-c13a2c3e26f0-eos-efficient-private-delegation-zksnark-provers|EOS: Efficient Private Delegation of zkSNARK Provers]] | usage source extension + bridge trigger | KZG-style PC circuits and openings as PIOP consistency-check substrate for delegated SNARK proving | 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | no | route delegated-proving details through [[private-delegated-proving|Private delegated proving]] |
 | [[sha256-bdda577b4120-gemini-elastic-snarks-for-diverse-environments|Gemini: Elastic SNARKs for Diverse Environments]] | usage source extension + bridge trigger | KZG commitment/opening as streaming PCS layer for elastic SNARKs | 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | no | route low-memory proof-system details through [[memory-efficient-snarks|Memory-efficient SNARKs]] |
 | [[eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system|Epistle: Elastic Succinct Arguments for Plonk Constraint System]] | usage source extension + bridge trigger | multilinear KZG commitment/opening as streaming PCS layer for elastic Plonkish SNARKs | 方法族与解决路线; 代表 Sources; 当前综合; Bridge Links | no | route low-memory proof-system details through [[elastic-snarks|Elastic SNARKs]] |
+| [[consensys-gnark-master|Consensys/gnark]] | usage source extension | KZG SRS, trace commitments and batch openings in a production PLONK backend implementation | 方法族与解决路线; 代表 Sources; 当前综合 | no | route implementation details through source note; compare with other PLONK/KZG implementations before splitting a child node |
 
 ## Bridge Links
 
@@ -315,12 +325,13 @@ trust_tier: "primary"
 | nahida-knowledge-kzg-commitments | evidenced_by | vault/03_Sources/papers/sha256-bdda577b4120-gemini-elastic-snarks-for-diverse-environments.md | Gemini source note | high | active_seed |
 | nahida-knowledge-kzg-commitments | bridges_to | nahida-bridge-memory-efficient-snarks-to-kzg-commitments | bridge note | high | active_seed |
 | nahida-knowledge-kzg-commitments | evidenced_by | vault/03_Sources/papers/eprint-2024-872-epistle-elastic-succinct-arguments-plonk-constraint-system.md | Epistle source note; elastic multilinear KZG route | high | active_seed |
+| nahida-knowledge-kzg-commitments | evidenced_by | vault/03_Sources/github/consensys-gnark-master.md | gnark PLONK KZG SRS/commit/open implementation route | high | active_seed |
 
 ## 缺口与队列
 
 | Gap | Why it matters | Proposed skill | Priority | Status |
 | --- | --- | --- | --- | --- |
-| KZG 在 PLONK/DA 中的现代使用、trusted setup ceremonies、IPA/FRI 对照缺 source。 | 影响本节点 foundation 完整性 | nahida-research-search or nahida-update | medium | queued |
+| KZG 在 PLONK/DA 中的现代使用、trusted setup ceremonies、IPA/FRI 对照仍薄。 | gnark 已补 PLONK/KZG implementation evidence；foundation 和 cross-implementation comparison 仍需更多 sources。 | nahida-research-search or nahida-update | medium | queued |
 | DKZG/bivariate KZG 目前只有 Pianist usage source。 | 需要更多来源才能判断是否拆成独立子节点。 | nahida-update / nahida-research-search | medium | review |
 | KZG-backed fair exchange 目前只有 FDE seed。 | SAVER 已补足 generic verifiable-encryption seed；仍需 ZKCPlus/VECK/KZG-specific sources 校准 KZG-backed fair exchange 的方法族边界。 | nahida-update | medium | queued |
 | KZG-backed delegated-proving consistency checking 目前只有 EOS + Siniel seeds。 | 需要 zkSaaS/collaborative zkSNARKs 或 non-KZG delegated-proving sources 作为对照，避免把 EOS/Siniel 的 checker 设计误当成领域通用定理。 | nahida-update / nahida-research-search | medium | queued |
@@ -337,3 +348,4 @@ trust_tier: "primary"
 | 2026-06-23 | nahida-knowledge-20260623-eos-private-delegated-proving | Added EOS KZG/PCS consistency-check usage extension to private delegated proving bridge. | 1 source note | codex |
 | 2026-06-22 | nahida-knowledge-20260622-gemini-elastic-snarks | Added elastic KZG usage extension and bridge to memory-efficient SNARKs. | 1 source note | codex |
 | 2026-06-23 | nahida-knowledge-20260623-epistle-elastic-snarks | Added elastic multilinear KZG usage extension from Epistle for Plonkish elastic SNARKs. | 1 source note | codex |
+| 2026-06-24 | nahida-knowledge-20260624-consensys-gnark | Added gnark PLONK/KZG implementation usage extension. | 1 source note | codex |

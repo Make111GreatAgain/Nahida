@@ -204,13 +204,18 @@ vault/
   03_Sources/      paper/repo/web 等来源笔记
   04_Knowledge/    分层知识节点
   05_Bridges/      跨知识节点关系
-  90_Generated/    本地生成缓存、日志、报告、ledger、队列；已被 git ignore
+  90_Generated/    共享索引和本地运行产物
+    indexes/       可入库的检索索引
+    reports/       本地报告；git ignore
+    runs/          本地运行记录；git ignore
+    ledgers/       本地 ledger；git ignore
+    review-queues/ 本地 review queue；git ignore
 skills/            nahida-* Codex skills
 docs/              使用说明和 skill 说明
 scripts/           本地安装/辅助脚本
 ```
 
-`90_Generated/`、PDF 抽取全文、运行日志、报告、队列文件不会进入 Git。公开仓库保留的是可读的结构化知识和 skill，不包含本地论文 PDF 文件。
+`90_Generated/indexes/` 会进入 Git，因为它是跨环境可复用的检索辅助。`90_Generated/reports/`、`runs/`、`ledgers/`、`review-queues/`、PDF 抽取全文、运行日志、报告和队列文件不会进入 Git。公开仓库保留的是可读的结构化知识、共享索引和 skill，不包含本地论文 PDF 文件。
 
 ## 现有内容梗概
 
