@@ -39,39 +39,152 @@ Nahida 完整工作流依赖这些 Obsidian/Codex 能力：
 - `nahida-update`: 加入或更新知识。适合论文、论文目录、GitHub 仓库、网页、段落、研究关键词、每日更新和已有笔记吸收。
 - `nahida-query`: 只查询现有 vault。默认不联网、不抓 DOI/arXiv/GitHub、不读取 vault 外部文件，也不用模型常识补齐缺口。
 
-常用请求示例：
+在 Codex 里可以用自然语言写 `使用 nahida-update ...`，也可以显式写 `$nahida-update`、`$nahida-query` 这样的 skill 名。`/nahida-update` 只有在你的客户端把 slash command 映射到 skill 时才适用；本仓库示例统一使用 `$nahida-*`。
+
+### 4. 科研与开发工作流示例
+
+Nahida 可以配合科研使用：读论文、整理 related work、抽出研究问题、追踪 open problems、比较方法路线、生成后续调研队列。
+
+Nahida 也可以配合开发使用：分析 GitHub 仓库、沉淀架构和模块模式、把工程实现挂到相关知识节点、查询某类系统设计的已有方案和边界。
+
+#### 读一篇论文
 
 ```text
-使用 nahida-update，把 /path/to/paper.pdf 这篇论文加入 Nahida。需要精读，并吸收到 Source + Knowledge + Bridge 架构。
+$nahida-update
+把 /path/to/paper.pdf 加入 Nahida。需要 deep-read，不要只读摘要。
+输出要求：
+1. 写一个独立 paper source note。
+2. 判断它解决的问题、所属 domain/direction/topic。
+3. 如果缺 foundation，指出要补哪些基础概念或资料。
+4. 吸收到 Source + Knowledge + Bridge 架构。
+5. 最后给出新增/更新的 note 路径、关系路径、缺口和下一步建议。
 ```
+
+适合科研场景：精读论文、整理创新点、把论文放进已有问题脉络。适合开发场景：从论文中抽取可实现的协议、系统设计、benchmark 和工程风险。
+
+#### 导入一个论文目录
 
 ```text
-使用 nahida-update，分析 https://github.com/owner/repo 并加入 Nahida。重点看它解决的问题、架构、核心模块、API、数据流和可复用实现模式。
+$nahida-update
+把 ~/Desktop/papers 下面的论文加入 Nahida。
+先 inventory、去重、粗分类和排队；然后串行处理：
+每次 deep-read exactly one PDF，写 source note，吸收到 knowledge/bridge，checkpoint 队列，再继续下一篇。
 ```
+
+适合建立一个方向的本地 literature base。队列未完成时，Nahida 应该报告 next item、remaining count 和 resume command，而不是假装全部吸收完成。
+
+#### 分析一个 GitHub 仓库
 
 ```text
-使用 nahida-update，调研 data availability sampling，补充 foundation sources 并吸收到知识库。
+$nahida-update
+分析 https://github.com/owner/repo 并加入 Nahida。
+重点看它解决的问题、架构、核心模块、入口/API、数据流、配置面、测试/示例、README 和代码是否一致，以及可复用实现模式。
+不要把 clone 的仓库存进 vault，只保留结构化 repo source note 和证据引用。
 ```
+
+适合开发场景：快速理解开源项目、比较架构选择、沉淀实现模式。适合科研场景：把论文系统和真实实现对应起来，找到 artifact/reproducibility gap。
+
+#### 加入网页、博客或技术文档
 
 ```text
-使用 nahida-query，Nahida 里关于 zk-SNARK proof aggregation 已经有什么？请给出来源、关系路径和缺口。
+$nahida-update
+把 https://example.com/article 加入 Nahida。
+先判断它是 official docs、reference、concept explainer、engineering blog 还是 news。
+如果是稳定资料，写 source note 并吸收到相关 knowledge node；如果只是新闻或弱信号，放入 freshness/watch/review，不要直接改 evergreen knowledge。
 ```
+
+适合补基础概念、官方 API、标准、工程实践和近期动向。网页如果只是热度信号，应该进入 watchlist 或 review queue。
+
+#### 调研一个方向
 
 ```text
-使用 nahida-consolidate，只基于现有笔记优化当前知识库，不重新读论文、仓库或网页。
+$nahida-update
+调研 data availability sampling。
+目标是补 foundation sources，整理核心问题、方法族、代表论文/仓库、评测轴和 open problems，并吸收到 Nahida。
 ```
+
+适合从一个关键词启动新方向。这个模式允许联网搜索；和 `nahida-query` 的 vault-only 查询不同。
+
+#### 查询知识库已有内容
 
 ```text
-使用 nahida-audit，检查重复 ID、坏 wikilink、弱 knowledge node、bridge 质量和 legacy 输出。
+$nahida-query
+zk-SNARKs 有哪些可以优化的地方？
+请只基于 Nahida 现有笔记回答，给出结论、覆盖状态、依据、关系路径、缺口和建议更新。
 ```
 
-### 4. 更新与查询的区别
+`nahida-query` 的重点是复用上层分层，而不是扫所有 source notes。它应该优先走：
+
+```text
+domain knowledge -> direction knowledge -> problem/method/application knowledge -> bridge -> selected source notes
+```
+
+#### 查询输出示例
+
+实际 Codex 会在答案前后出现一些运行话语；README 里只展示核心输出形状：
+
+```text
+结论
+按 Nahida 当前库内资料，zk-SNARKs 的优化空间主要分成这些方向：
+
+1. 证明生成时间
+   优化 prover 的主耗时模块，尤其是 NTT/FFT、MSM、有限域运算和椭圆曲线运算。
+   相关路线包括 GPU、多 GPU、ASIC、硬件感知调度。库内证据主要来自 GZKP、PipeZK、zk-Bench。
+
+2. 证明生成内存
+   降低峰值内存、减少 pass 数、支持 streaming witness/R1CS。
+   相关路线包括 memory-efficient SNARKs、elastic SNARKs、folding-based constructions、hash-bound circuit partitioning。
+
+3. 分布式证明生成
+   把大电路、大批量证明、zkRollup prover workload 拆到多机或多阶段执行。
+   目标通常是提升吞吐量，而不只是优化单机延迟。
+
+4. 递归、聚合与 folding
+   用 proof aggregation 或 folding schemes 降低批量验证成本，或把长计算压缩成递归/增量证明。
+
+5. 电路与算术层优化
+   优化 arithmetization、constraint 数量、lookup、range proof、hash gadget、浮点运算、ML operator。
+
+查询模式
+vault_only。只查本地 Nahida vault，没有联网，也没有把它当作“最新全网综述”。
+
+覆盖状态
+能回答主要优化方向，但基础综述还不完整。核心节点 zk-SNARKs 当前仍标注 foundation/review 相关缺口。
+
+依据
+- vault/04_Knowledge/zero-knowledge-proofs/proof-systems/zk-snarks.md
+- vault/04_Knowledge/zero-knowledge-proofs/proof-systems.md
+- vault/04_Knowledge/zero-knowledge-proofs/research-dynamics.md
+- vault/04_Knowledge/zero-knowledge-proofs/proof-systems/hardware-accelerated-proving.md
+- vault/04_Knowledge/zero-knowledge-proofs/proof-systems/memory-efficient-snarks.md
+- vault/04_Knowledge/zero-knowledge-proofs/proof-systems/distributed-proof-generation.md
+
+关系路径
+zero-knowledge-proofs -> proof-systems -> zk-snarks
+主要分支包括 hardware-accelerated-proving、memory-efficient-snarks、distributed-proof-generation、proof-aggregation、commit-and-prove、zkML、proof-system-benchmarking。
+
+新近性
+库内 ZKP 研究动态的 evidence window 是 2026-06-11 到 2026-06-23，最后综合时间是 2026-06-23。
+这说明 Nahida 当前笔记是较新的本地综合，但不是外部最新趋势检索。
+
+缺口
+Groth16、Pinocchio、PLONK、STARK 等基础源不全；SnarkPack/TIPP/Groth16 aggregation 源不全；
+当前 GPU/FPGA/ASIC prover 生态、生产级 repo 和横向 benchmark 仍需要补。
+
+建议更新
+后续最值得补三包：基础 proof system pack，聚合/递归/folding pack，硬件与 benchmark pack。
+可以用 nahida-research-search 补 foundation/search，用 nahida-github-repo-analyze 补实现与复现证据。
+```
+
+这个输出模式对科研有用，因为它不只回答“有哪些论文”，还会暴露研究问题、路线分叉和缺口。对开发也有用，因为它会把算法/系统优化落到工程瓶颈、benchmark、repo evidence 和复现风险上。
+
+### 5. 更新与查询的区别
 
 `nahida-update` 是 bottom-up：先把一个来源读成完整 source note，再把它对领域、问题、方法族和 bridge 的影响吸收到上层。
 
 `nahida-query` 是 top-down：先读 `04_Knowledge/` 的领域/方向/问题节点，再读 `05_Bridges/`，只有需要证据细节时才打开少量 `03_Sources/`。如果 vault 没有覆盖，它应该明确说 `知识库没有记录`、`知识库只有部分记录` 或 `知识库没有足够新近资料`，然后建议具体 update 动作。
 
-### 5. 批量论文目录
+### 6. 批量论文目录
 
 给一个论文目录时，Nahida 应该先做 inventory、去重、粗分类和队列，然后串行处理：
 
