@@ -19,4 +19,4 @@ owner: "human|agent|mixed"
 managed_by: "nahida"
 ```
 
-Review queue notes should include reason, affected paths/IDs, proposed action, risk, and resolution.
+Review queue notes should include reason, affected paths/IDs, proposed action, risk, and resolution. Note body should be Chinese-first while preserving exact IDs, paths, and schema keys.

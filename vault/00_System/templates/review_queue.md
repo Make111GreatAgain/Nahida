@@ -1,6 +1,6 @@
 ---
 id: "nahida-review-YYYYMMDD-slug"
-title: "Review Item"
+title: "复核项"
 type: "review_queue"
 schema_version: "1.0"
 ontology_version: "1.0"
@@ -18,14 +18,14 @@ confidence: "unknown"
 trust_tier: "unknown"
 ---
 
-# Review Item
+# 复核项
 
-## Reason
+## 原因
 
-## Affected Paths Or IDs
+## 受影响路径或 ID
 
-## Proposed Action
+## 建议动作
 
-## Risk
+## 风险
 
-## Resolution
+## 处理结果

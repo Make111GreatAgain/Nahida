@@ -6,6 +6,11 @@ topics:
   - "multi-agent"
   - "subagent"
   - "tool use"
+  - "context engineering"
+  - "agent evaluation"
+  - "code agents"
+  - "retrieval augmented generation"
+  - "zkML"
 frequency: "daily"
 lookback_days: 7
 max_candidates_per_source: 20

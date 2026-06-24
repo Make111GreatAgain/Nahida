@@ -1,0 +1,78 @@
+filters:
+  or:
+    - 'type == "source"'
+    - 'type == "review_queue"'
+    - 'type == "run"'
+properties:
+  title:
+    displayName: "Title"
+  type:
+    displayName: "Type"
+  status:
+    displayName: "Status"
+  queue_id:
+    displayName: "Queue ID"
+  queue_status:
+    displayName: "Queue Status"
+  reading_status:
+    displayName: "Reading Status"
+  primary_direction:
+    displayName: "Primary Direction"
+  processed_count:
+    displayName: "Processed"
+  remaining_count:
+    displayName: "Remaining"
+  last_processed_item:
+    displayName: "Last Processed"
+  continuation_required:
+    displayName: "Continuation Required"
+  turn_item_budget:
+    displayName: "Turn Budget"
+  stop_reason:
+    displayName: "Stop Reason"
+  updated:
+    displayName: "Updated"
+views:
+  - type: table
+    name: "Serial Runs"
+    filters:
+      and:
+        - 'type == "run"'
+        - 'file.hasTag("serial-auto")'
+    order:
+      - file.name
+      - title
+      - status
+      - queue_id
+      - processed_count
+      - remaining_count
+      - continuation_required
+      - last_processed_item
+      - updated
+  - type: table
+    name: "Deep Read Sources"
+    filters:
+      and:
+        - 'type == "source"'
+        - 'reading_depth == "deep_read"'
+    order:
+      - file.name
+      - title
+      - reading_status
+      - primary_direction
+      - updated
+  - type: table
+    name: "Review Queues"
+    filters:
+      and:
+        - 'type == "review_queue"'
+        - 'file.hasTag("paper-intake")'
+    order:
+      - file.name
+      - title
+      - status
+      - processed_count
+      - remaining_count
+      - continuation_required
+      - last_processed_item
+      - updated

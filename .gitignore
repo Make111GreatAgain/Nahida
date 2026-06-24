@@ -1,3 +1,20 @@
 .DS_Store
 *.tmp
 *.log
+.nahida/tmp/
+
+# Local Obsidian UI state.
+.obsidian/workspace*.json
+
+# Nahida generated caches, ledgers, review queues, run logs, and reports.
+vault/90_Generated/
+
+# Local intake artifacts and extracted full text should not be published.
+vault/02_Raw/pdf/extracted/
+vault/02_Raw/pdf/nahida-paper-domain-serial-queue*.json
+
+vault/**/.git/
+vault/**/node_modules/
+vault/**/target/
+vault/**/dist/
+vault/**/build/

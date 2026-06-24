@@ -1,0 +1,68 @@
+filters:
+  or:
+    - 'type == "synthesis"'
+    - 'type == "source"'
+    - 'type == "project"'
+    - 'type == "review_queue"'
+
+properties:
+  title:
+    displayName: "Title"
+  type:
+    displayName: "Type"
+  synthesis_kind:
+    displayName: "Synthesis Kind"
+  freshness_status:
+    displayName: "Freshness"
+  valid_until:
+    displayName: "Valid Until"
+  updated:
+    displayName: "Updated"
+  confidence:
+    displayName: "Confidence"
+
+views:
+  - type: table
+    name: "Fresh Syntheses"
+    filters:
+      and:
+        - 'type == "synthesis"'
+        - 'freshness_status == "fresh"'
+    order:
+      - file.name
+      - synthesis_kind
+      - valid_until
+      - updated
+      - confidence
+  - type: table
+    name: "Stale Syntheses"
+    filters:
+      and:
+        - 'type == "synthesis"'
+        - or:
+            - 'freshness_status == "stale"'
+            - 'freshness_status == "needs_refresh"'
+    order:
+      - file.name
+      - synthesis_kind
+      - valid_until
+      - updated
+      - confidence
+  - type: table
+    name: "Lower Notes"
+    filters:
+      or:
+        - 'type == "source"'
+        - 'type == "project"'
+    order:
+      - file.name
+      - type
+      - updated
+      - confidence
+  - type: table
+    name: "Review"
+    filters: 'type == "review_queue"'
+    order:
+      - file.name
+      - status
+      - updated
