@@ -37,17 +37,28 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-skills-and-context-engineering"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs: []
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "skills and context engineering"
   - "Codex skills"
   - "SKILL.md injection"
   - "AGENTS.md prompt context"
   - "prompt engineering"
+  - "OpenClaw context engine"
+  - "OpenClaw memory"
 aliases:
   - "prompt engineering"
   - "context engineering"
@@ -62,17 +73,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/topic"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -99,6 +112,20 @@ Skills and context engineering is the design of model-visible instruction/contex
 ## Reusable Insight
 
 Prompt engineering in robust agents is not a monolithic string. It is a context-fragment system with provenance, role, lifecycle phase, size limits, explicit activation rules, and tests against request shape.
+
+## OpenClaw Pattern
+
+OpenClaw extends context engineering beyond prompt fragments:
+
+| Mechanism | OpenClaw evidence | Role |
+| --- | --- | --- |
+| Bootstrap files | First turn can inject `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `BOOTSTRAP.md`, `IDENTITY.md` and `USER.md` with truncation and workspace attestation. | Gives agent identity, project and tool guidance explicit file surfaces. |
+| Skill roots | Skills load from workspace, `.agents/skills`, `~/.agents/skills`, `~/.openclaw/skills`, bundled roots and extra dirs. | Supports local, shared, bundled and plugin skill sources. |
+| Skill watchers/cache | Runtime watches skill directories, applies TTL/cache and bumps skill snapshot versions for subscribed workspaces. | Keeps a daemonized agent current without rescanning everything each turn. |
+| Context engine | Interface owns ingest, assemble, compact, after-turn, maintenance and subagent spawn preparation; results can include prompt authority, system prompt additions and context projection. | Makes context ownership replaceable and plugin-visible. |
+| Memory files | Memory docs define `MEMORY.md`, daily notes, `DREAMS.md`, active memory search/get and flush before compaction. | Makes long-term memory explicit, inspectable and file-backed. |
+
+Compared with Codex, OpenClaw has more platform-level context surfaces. Codex's absorbed evidence is strongest on prompt-fragment assembly, AGENTS.md and explicit skill injection; OpenClaw's strongest contribution is daemon-friendly skill refresh, context-engine abstraction and personal memory.
 
 ## Boundary
 

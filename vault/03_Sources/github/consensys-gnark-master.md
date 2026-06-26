@@ -81,7 +81,7 @@ trust_tier: "primary"
 
 ## Deep Reading Coverage
 
-本次是仓库深读，不是 README 摘要。临时 clone 放在 `/tmp/nahida-repos/consensys-gnark`，没有写入 vault；用 CodeGraph 建索引后覆盖了核心包和调用链。
+本次是仓库深读，不是 README 摘要。临时 clone 仅用于分析，没有写入 vault；用 CodeGraph 建索引后覆盖了核心包和调用链。
 
 | Area | Files / symbols read | Why it matters |
 | --- | --- | --- |
@@ -286,5 +286,5 @@ This source reduces the prior `zero-knowledge-proofs` domain-dynamics gap around
 
 - Skill route: `nahida-update` -> `nahida-github-repo-analyze` -> `nahida-knowledge-get`.
 - Analysis inputs: GitHub repo clone, README, changelog, Go module, CodeGraph index, code search, targeted package tests.
-- Temporary clone: `/tmp/nahida-repos/consensys-gnark`; removed after validation and not kept as a vault artifact.
+- Temporary clone: analysis-only checkout; removed after validation and not kept as a vault artifact.
 - Absorption status: safe for `04_Knowledge` source-extension rows only; module-by-module implementation details remain in this `03_Sources` note.

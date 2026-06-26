@@ -82,7 +82,7 @@ trust_tier: "primary"
 | Analyzed commit | `f959e7fc9832dfa0ebfb6542ab1bbf829638ac24` |
 | Commit date observed | `2026-06-24T08:57:34Z` |
 | Commit subject observed | `[codex] Emit implicit skill usage for support reads (#29731)` |
-| Local analysis path | `/tmp/nahida-codex-repo.m7TNaP/codex` during analysis only |
+| Local analysis path | Temporary checkout during analysis only |
 | Indexing | CodeGraph initialized: 3,185 files, 101,806 nodes, 157,493 edges |
 | Main implementation | `codex-rs` Cargo workspace; README describes Codex CLI as a local coding agent |
 | Distribution | `curl` installer, npm `@openai/codex`, Homebrew cask, release binaries |

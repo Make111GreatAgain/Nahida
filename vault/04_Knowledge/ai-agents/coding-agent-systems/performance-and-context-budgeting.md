@@ -36,17 +36,28 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-performance-and-context-budgeting"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs: []
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "agent performance optimization"
   - "context budgeting"
   - "auto compaction"
   - "tool output truncation"
   - "startup prewarm"
+  - "OpenClaw preemptive compaction"
+  - "OpenClaw session lanes"
 aliases:
   - "agent performance"
   - "context budget"
@@ -61,17 +72,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/topic"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -98,6 +111,22 @@ Performance and context budgeting covers latency, startup work, repeated discove
 ## Reusable Insight
 
 Agent performance work is not only model latency. It includes startup concurrency, discovery caching, bounded context artifacts, tool output truncation, compaction strategy, runtime parallelism, and transport reuse.
+
+## OpenClaw Pattern
+
+OpenClaw's performance and budget controls are daemon/platform oriented:
+
+| Mechanism | OpenClaw evidence | Effect |
+| --- | --- | --- |
+| Session/global lanes | `runEmbeddedAgent` enters per-session/global lanes, queue priority, lane timeout and run context claim. | Prevents concurrent transcript mutation and makes long-lived daemon work schedulable. |
+| Provider/harness/auth resolution | Model, provider, harness and auth profile are resolved before attempts, with provider plugin boundaries and failover responsibilities. | Separates runtime choice from provider transport and auth lifecycle. |
+| Context-engine limits | Runtime settings include model/context engine selection, host, limits and diagnostics; assemble results include estimated tokens and prompt authority. | Makes context budget an engine contract. |
+| Preemptive compaction | Source estimates prompt pressure with safety margin and decides whether to compact/truncate before prompt submission. | Reduces provider overflow and mid-run recovery cost. |
+| Successor transcripts | Compaction can adopt successor session files when truncating after compaction. | Keeps long sessions durable while limiting model-visible history. |
+| Memory flush | Docs describe automatic memory save before compaction. | Preserves important information before summarizing away transcript details. |
+| Skill watcher cache | Skill refresh watches unique directories, uses cache/TTL and fans changes to subscribed workspaces. | Avoids repeated skill scans in an always-on agent. |
+
+Comparison: Codex evidence is stronger for local coding runtime startup prewarm, model session reuse and exact same-turn tool parallelism. OpenClaw evidence is stronger for daemon scheduling, pluggable context engines, session transcript maintenance and preemptive compaction as platform machinery.
 
 ## Boundary
 

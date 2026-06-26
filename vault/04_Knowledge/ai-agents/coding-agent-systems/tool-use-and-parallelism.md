@@ -36,18 +36,29 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-tool-use-and-parallelism"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs:
   - "nahida-bridge-tool-parallelism-to-multi-agent-orchestration"
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "tool use and parallelism"
   - "parallel tool calls"
   - "tool runtime"
   - "ToolCallRuntime"
   - "tool_search deferred tools"
+  - "OpenClaw tool policy"
+  - "OpenClaw before_tool_call"
 aliases:
   - "tool-use engineering"
 domains:
@@ -61,17 +72,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/topic"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -106,6 +119,21 @@ Default tool executors are not parallel-safe (`ToolExecutor::supports_parallel_t
 ## Important Boundary
 
 Parallel tool calls are same-turn runtime tasks. They do not create new agent identity, a new thread, a mailbox, or an independent turn. That boundary is captured in [[tool-parallelism-to-multi-agent-orchestration|Tool parallelism -> multi-agent orchestration]].
+
+## OpenClaw Pattern
+
+OpenClaw broadens tool-use engineering from "runtime dispatch" into "tool family construction plus policy":
+
+| Mechanism | OpenClaw evidence | Interpretation |
+| --- | --- | --- |
+| Tool families | `OpenClawCodingToolConstructionPlan` separates base, shell, channel, OpenClaw and plugin tools. | Tool surface is assembled by family instead of one static registry. |
+| OpenClaw tools | The plan includes sessions/history/list/send/spawn/yield, subagents, message, canvas, cron, gateway, goals, skill workshop, web_fetch/search, image, TTS and update_plan. | Platform tools expose Gateway, channel, automation and delegation capabilities. |
+| Allowlist/group expansion | Tool construction expands plugin groups and applies raw allowlists/forced message behavior. | Large plugin surfaces are governed by group semantics. |
+| Effective policy | `agent-tools.policy.ts` combines config/session/agent/model/group/subagent layers and has subagent always-denied/leaf-denied tools. | Availability is contextual and identity-sensitive. |
+| Before-tool runtime | `before_tool_call` runs plugin hooks, trusted policies, approvals, diagnostics, loop detection, skill telemetry and argument adjustments. | Tool execution has a policy hook pipeline before handler work. |
+| Sandbox integration | Sandbox context, registry and filesystem bridge resolve per-run workspaces, mounts and guarded file operations. | Tool execution can be tied to sandbox state and host-path guards. |
+
+OpenClaw evidence does not show the same precise `ToolCallRuntime` RwLock parallelism pattern recorded in Codex. Its stronger contribution here is composition: tool families, channel/platform tools, plugin group expansion, policy layers and pre-call hooks.
 
 ## Harness Evidence
 

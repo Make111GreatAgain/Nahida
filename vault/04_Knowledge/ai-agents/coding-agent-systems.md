@@ -42,17 +42,27 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-coding-agent-systems"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs:
   - "nahida-bridge-tool-parallelism-to-multi-agent-orchestration"
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "coding agent systems"
   - "code agent architecture"
   - "local coding agent runtime"
   - "Codex CLI architecture"
+  - "OpenClaw Gateway architecture"
   - "agent harness engineering"
 aliases:
   - "code agents"
@@ -71,17 +81,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/direction"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -92,7 +104,10 @@ trust_tier: "primary"
 
 Coding agent systems are agent runtimes specialized for software work. They combine repository/project context, prompt fragments, tool execution, shell/sandbox policy, source-control aware workflows, code editing, long-running turn loops, and often IDE/app/server protocol surfaces.
 
-Current evidence is implementation-centered: [[openai-codex-main-f959e7f|openai/codex]].
+Current evidence is implementation-centered and now comparative:
+
+- [[openai-codex-main-f959e7f|openai/codex]]: local coding-agent runtime with CLI/TUI/app-server surfaces, tight tool runtime, safety orchestration and integration harness.
+- [[openclaw-openclaw-main-751a6c2|openclaw/openclaw]]: local-first personal agent platform where the coding agent is embedded in a Gateway/channel/plugin/memory/subagent system.
 
 ## Codex-Backed Architecture Pattern
 
@@ -114,6 +129,17 @@ flowchart LR
   K --> M["AgentControl thread tree"]
 ```
 
+## Codex And OpenClaw As Two Implementation Families
+
+| Layer | Codex pattern | OpenClaw pattern | Comparative reading |
+| --- | --- | --- | --- |
+| Host surface | CLI/TUI/app-server/session protocol around a local coding agent. | Long-lived Gateway with WS protocol, CLI, apps, channels, Canvas, cron, nodes and plugin surfaces. | Codex optimizes the coding runtime; OpenClaw optimizes always-on multi-surface personal agency. |
+| Loop | `submission_loop` -> `run_turn` -> sampling/tool feedback/compaction. | Gateway `agent` RPC -> ingress command -> `runEmbeddedAgent` lanes -> model/harness/context/tool attempts. | Both separate external submission from model/tool feedback; OpenClaw adds Gateway transactions and per-run provider/harness resolution. |
+| Tools | ToolRouter/ToolRegistry/ToolCallRuntime, explicit parallel capability and ToolOrchestrator safety. | Tool family construction plan, allowlists, plugin groups, effective policy layers, before-tool hooks, sandbox bridge. | Codex has a crisper same-turn parallelism mechanism; OpenClaw has broader policy/plugin/channel composition. |
+| Context | Base/developer fragments, AGENTS.md, skills, plugins/apps, token-budget context. | Bootstrap files, skill roots/watchers, context engine lifecycle, Markdown memory, compaction hooks. | OpenClaw turns context into a replaceable engine and personal memory substrate. |
+| Multi-agent | AgentControl thread tree, mailbox and V2 tools. | Native subagent child sessions, registry/control scope, Gateway child `agent` calls, context-engine spawn prep. | Both expose delegation as tools while implementing durable agent identity under the tool layer. |
+| QA | Mock Responses streams and captured request assertions. | QA Lab, channel-shaped QA, Docker Gateway lane, Matrix/live-channel realism and package script matrix. | Codex checks model request/event contracts; OpenClaw checks platform/channel behavior. |
+
 ## Subtopics
 
 | Topic | Role in coding agents | Evidence |
@@ -130,9 +156,11 @@ flowchart LR
 
 In Codex, the coding agent is not a single "LLM loop". It is a layered harness: protocol/session state, model-visible context assembly, per-step tool planning, tool dispatch lifecycle, safety/sandbox orchestration, optional multi-agent control plane, and integration tests that assert model request shape and event order.
 
+OpenClaw supports the same design claim but adds a wider host architecture: Gateway control plane, channel ingress, typed WS protocol, plugins, memory, context-engine ownership, native subagent sessions, and companion apps. The "agent" becomes a platform service whose coding ability is one capability among channel messaging, automation, memory, voice, web/search and delegation.
+
 ## Evidence Boundary
 
-`active_seed` because `openai/codex` is a strong primary implementation source. Needs external comparison before generalizing across all coding agents.
+`active_seed` because `openai/codex` and `openclaw/openclaw` are strong primary implementation sources. Needs external framework and benchmark sources before generalizing across all coding agents.
 
 ## Refresh Rules
 

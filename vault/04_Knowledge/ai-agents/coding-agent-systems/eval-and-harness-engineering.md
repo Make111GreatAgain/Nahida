@@ -36,16 +36,27 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-eval-and-harness-engineering"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs: []
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "eval and harness engineering"
   - "agent test harness"
   - "mock Responses SSE"
   - "Codex integration tests"
+  - "OpenClaw QA Lab"
+  - "OpenClaw channel QA"
 aliases:
   - "harness engineering"
   - "agent evaluation harness"
@@ -60,17 +71,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/topic"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -95,6 +108,19 @@ Eval and harness engineering for agents is the test infrastructure that can driv
 ## Reusable Insight
 
 Agent eval harnesses should assert the request sent to the model and the protocol events emitted by the runtime. Unit tests of helper functions are insufficient because many agent regressions are context-shape, stream-order, approval, or tool-output replay bugs.
+
+## OpenClaw Pattern
+
+OpenClaw's QA docs emphasize channel-shaped realism:
+
+| Harness component | OpenClaw evidence | Role |
+| --- | --- | --- |
+| QA channel/lab/matrix | `qa-channel`, `qa-lab`, `qa-matrix`, `qa/` and Mantis-style automation are described in QA docs. | Exercises Gateway/channel/runtime behavior beyond unit tests. |
+| Docker gateway lane | QA site includes Gateway dashboard and QA Lab with Docker-backed gateway lane. | Allows isolated end-to-end runs. |
+| Matrix/live channels | Matrix QA provisions disposable homeserver and checks mention gating, allowlists, threads, reactions, edits, restarts, approvals, media and E2EE. | Tests channel semantics that a pure model harness misses. |
+| Script matrix | Package scripts include unit, e2e, gateway, docker, live, QA, perf and startup categories. | Makes platform regression lanes explicit. |
+
+Comparison: Codex's harness is strongest at mock model stream and captured request assertions. OpenClaw adds the QA problem created by becoming a multi-channel platform: delivery, auth, restart, channel semantics and Docker/live transport realism.
 
 ## Boundary
 

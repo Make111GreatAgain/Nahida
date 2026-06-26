@@ -36,16 +36,26 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-agent-loop-engineering"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs: []
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "agent loop engineering"
   - "agent turn loop"
   - "sampling tool feedback loop"
   - "Codex run_turn"
+  - "OpenClaw runEmbeddedAgent"
 aliases:
   - "loop engineering"
 domains:
@@ -58,17 +68,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/topic"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -98,10 +110,29 @@ Agent loop engineering is the design of the control loop that turns user/host su
 - Stop hooks can block completion and inject continuation fragments.
 - The loop records token usage, rate limits, telemetry, turn diff, lifecycle events and rollout persistence.
 
+## OpenClaw Pattern
+
+OpenClaw adds a Gateway-shaped loop around the model/tool feedback loop:
+
+| Layer | OpenClaw evidence | Role |
+| --- | --- | --- |
+| Gateway method | `agent` validates message, agent id, provider/model, session key, delivery target, channel/thread/group, prompt mode, attachments, timeouts, approval followups and idempotency key. | Converts external/channel ingress into a typed Gateway transaction. |
+| Dedupe and lifecycle | The handler uses idempotency key as run id, builds lifecycle metadata, records input provenance, and returns cached accepted/final results when dedupe keys match. | Makes agent runs retry-safe from clients/channels. |
+| Embedded runtime | `runEmbeddedAgent` resolves/backfills session keys, session file, session/global lanes, queue priority, run context, workspace and runtime plugins. | Serializes per-session state and prepares run-local environment. |
+| Model/runtime resolution | The runtime resolves explicit/default/alias model, provider, harness, auth profile and context engine before attempts. | Keeps provider/runtime/harness pluggable. |
+| Attempt loop | Runtime plan, prompt additions, context engine assembly, tool construction and `runEmbeddedAttemptWithBackend` are retried with compaction/fallback logic. | Keeps model calls, tools and compaction inside one managed lifecycle. |
+| Streaming/persistence | Gateway events, reply shaping, JSONL session entries, compaction adoption and session lifecycle hooks are emitted around the attempt. | Couples user-visible streams with durable transcript state. |
+
+## Comparison
+
+Codex's loop is centered inside a local session: `submission_loop` receives operations and `run_turn` owns sampling, tool feedback, pending input and compaction. OpenClaw puts a daemonized Gateway in front of the same kind of loop, so external surfaces get accepted/final dedupe, channel delivery metadata, session lanes, runtime plugin loading, provider/harness choice and context-engine ownership before the model call happens.
+
+Reusable distinction: Codex is an excellent reference for the inner coding-agent loop; OpenClaw is an excellent reference for wrapping that loop as an always-on multi-channel service.
+
 ## Reusable Insight
 
 Agent systems should keep "external submission routing", "turn execution", and "model sampling/tool feedback" as separate layers. This makes it easier to reason about cancellation, approvals, mailbox traffic, compaction, and tool output ordering.
 
 ## Evidence Boundary
 
-The node is backed by Codex core runtime only. Comparative loop designs need additional sources.
+The node is backed by Codex core runtime and a scoped OpenClaw runtime read. More frameworks are still needed for general claims.

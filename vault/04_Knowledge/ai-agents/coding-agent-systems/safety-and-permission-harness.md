@@ -36,17 +36,28 @@ relation_edges:
       - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
     confidence: "high"
     status: "active_seed"
+  - from: "nahida-knowledge-safety-and-permission-harness"
+    relation: "evidenced_by"
+    to: "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    evidence_refs:
+      - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
+    confidence: "medium-high"
+    status: "active_seed"
 bridge_refs: []
 source_note_refs:
   - "vault/03_Sources/github/openai-codex-main-f959e7f.md"
+  - "vault/03_Sources/github/openclaw-openclaw-main-751a6c2.md"
 representative_source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 query_keys:
   - "agent safety harness"
   - "permission harness"
   - "ToolOrchestrator"
   - "guardian review"
   - "sandbox retry"
+  - "OpenClaw pairing"
+  - "OpenClaw sandbox bridge"
 aliases:
   - "agent safety policy"
 domains:
@@ -61,17 +72,19 @@ tags:
   - "nahida/knowledge"
   - "nahida/topic"
 freshness_status: "fresh"
-last_synthesized: "2026-06-24"
-valid_until: "2026-07-24"
+last_synthesized: "2026-06-26"
+valid_until: "2026-07-26"
 evidence_window_start: "2026-06-24"
-evidence_window_end: "2026-06-24"
+evidence_window_end: "2026-06-26"
 created: "2026-06-24"
-updated: "2026-06-24"
+updated: "2026-06-26"
 managed_by: "nahida"
 run_ids:
   - "nahida-knowledge-20260624-openai-codex"
+  - "nahida-knowledge-20260626-openclaw"
 source_refs:
   - "github:openai/codex@f959e7fc9832dfa0ebfb6542ab1bbf829638ac24"
+  - "github:openclaw/openclaw@751a6c23f098e16a82f4afe7d4d674df1412a968"
 confidence: "high"
 trust_tier: "primary"
 ---
@@ -98,6 +111,21 @@ Safety and permission harness is the execution-time control layer that decides w
 ## Reusable Insight
 
 Agent safety should be close to execution orchestration, not scattered across handlers. Codex demonstrates a layered path where hooks, guardian/user approval, sandbox choice, managed network, and retry semantics are all visible to one orchestrator.
+
+## OpenClaw Pattern
+
+OpenClaw splits safety across Gateway, runtime policy and sandboxing:
+
+| Safety layer | OpenClaw evidence | Role |
+| --- | --- | --- |
+| Pairing/auth | README and Gateway protocol describe DM security defaults, pairing approvals, role/scope handshake and device signatures. | Controls who can invoke the local personal agent over channels/devices. |
+| Gateway method authorization | `agent` handler authorizes model overrides and internal session effects, validates approval followups and tracks idempotency. | Prevents clients from freely changing runtime-critical fields. |
+| Effective tool policy | Tool policy combines config, session, agent, provider/model, group and subagent capability layers. | Makes tool availability contextual. |
+| Subagent denylists | Subagents have always-denied and leaf-denied tools plus inherited capabilities. | Delegated agents do not automatically inherit root privileges. |
+| Before-tool hooks | `before_tool_call` applies plugin hooks, trusted policies, approvals, diagnostics, loop detection and telemetry. | Centralizes final pre-execution checks. |
+| Sandbox bridge | Sandbox context/registry/filesystem bridge creates per-run layouts, mounts and guarded host path operations. | Separates sandbox workspace from host filesystem authority. |
+
+Comparison: Codex concentrates safety in `ToolOrchestrator` around exec/network/sandbox/retry; OpenClaw adds an outer Gateway security boundary and broader channel/subagent policy layers.
 
 ## Boundary
 
